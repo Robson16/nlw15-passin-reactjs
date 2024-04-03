@@ -1,7 +1,14 @@
 {
   "name": "nlw15-passin-reactjs",
-  "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "author": "Robson H. Rodrigues <robhenrod@gmail.com>",
+  "repository": "https://github.com/Robson16/nlw15-passin-reactjs",
+  "license": "MIT",
+  "keywords": [
+    "ReactJs",
+    "NLW",
+    "Rocketseat"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",
