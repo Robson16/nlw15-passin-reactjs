@@ -1,7 +1,14 @@
 import dayjs from 'dayjs'
 import 'dayjs/locale/pt-br'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, MoreHorizontal, Search } from 'lucide-react'
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  MoreHorizontal,
+  Search,
+} from 'lucide-react'
 import { ChangeEvent, useEffect, useState } from 'react'
 import { IconButton } from './icon-button'
 import { Table } from './table/table'
@@ -47,10 +54,14 @@ export function AttendeeList() {
     return 1
   })
 
-  const [totalPages, setTotalPages] = useState(Math.ceil(totalAttendees / perPage))
+  const [totalPages, setTotalPages] = useState(
+    Math.ceil(totalAttendees / perPage),
+  )
 
   useEffect(() => {
-    const url = new URL('http://localhost:3333/events/9e9bd979-9d10-4915-b339-3786b1634f33/attendees')
+    const url = new URL(
+      'http://localhost:3333/events/9e9bd979-9d10-4915-b339-3786b1634f33/attendees',
+    )
 
     url.searchParams.set('pageIndex', String(page - 1))
 
@@ -59,9 +70,9 @@ export function AttendeeList() {
     }
 
     fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        setAttendees(data.attendees);
+      .then((response) => response.json())
+      .then((data) => {
+        setAttendees(data.attendees)
         setTotalAttendees(data.total)
         setTotalPages(Math.ceil(totalAttendees / perPage))
       })
@@ -109,13 +120,11 @@ export function AttendeeList() {
   }
 
   return (
-    <div className='flex flex-col gap-4'>
+    <div className="flex flex-col gap-4">
       <header className="flex gap-3 items-center">
         <h1 className="text-2xl font-bold">Participantes</h1>
-        <div
-          className="flex items-center gap-3 w-72 px-3 py-1.5 border border-white/10 rounded-lg"
-        >
-          <Search className='size-4 text-emerald-300' />
+        <div className="flex items-center gap-3 w-72 px-3 py-1.5 border border-white/10 rounded-lg">
+          <Search className="size-4 text-emerald-300" />
           <input
             onChange={onSearchInputChange}
             value={search}
@@ -129,7 +138,10 @@ export function AttendeeList() {
         <thead>
           <TableRow>
             <TableHeader style={{ width: 48 }}>
-              <input type="checkbox" className='size-4 bg-black/20 rounded border border-white/10' />
+              <input
+                type="checkbox"
+                className="size-4 bg-black/20 rounded border border-white/10"
+              />
             </TableHeader>
             <TableHeader>Código</TableHeader>
             <TableHeader>Participante</TableHeader>
@@ -141,32 +153,33 @@ export function AttendeeList() {
         <tbody>
           {attendees.map((attendee) => {
             return (
-              <TableRow key={attendee.id} className='hover:bg-white/5'>
+              <TableRow key={attendee.id} className="hover:bg-white/5">
                 <TableCell>
-                  <input type="checkbox" className='size-4 bg-black/20 rounded border border-white/10' />
+                  <input
+                    type="checkbox"
+                    className="size-4 bg-black/20 rounded border border-white/10"
+                  />
                 </TableCell>
+                <TableCell>{attendee.id}</TableCell>
                 <TableCell>
-                  {attendee.id}
-                </TableCell>
-                <TableCell>
-                  <div className='flex flex-col gap-1'>
-                    <span className='font-semibold text-white'>{attendee.name}</span>
+                  <div className="flex flex-col gap-1">
+                    <span className="font-semibold text-white">
+                      {attendee.name}
+                    </span>
                     <span>{attendee.email}</span>
                   </div>
                 </TableCell>
+                <TableCell>{dayjs().to(attendee.createdAt)}</TableCell>
                 <TableCell>
-                  {dayjs().to(attendee.createdAt)}
-                </TableCell>
-                <TableCell>
-                  {
-                    attendee.checkedInAt === null
-                      ? <span className='text-zinc-400'>Não fez check-in</span>
-                      : dayjs().to(attendee.checkedInAt)
-                  }
+                  {attendee.checkedInAt === null ? (
+                    <span className="text-zinc-400">Não fez check-in</span>
+                  ) : (
+                    dayjs().to(attendee.checkedInAt)
+                  )}
                 </TableCell>
                 <TableCell>
                   <IconButton transparent>
-                    <MoreHorizontal className='size-4' />
+                    <MoreHorizontal className="size-4" />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -178,34 +191,30 @@ export function AttendeeList() {
             <TableCell colSpan={3}>
               Mostrando {attendees.length} de {totalAttendees} itens
             </TableCell>
-            <TableCell colSpan={3} className='text-right' >
-              <div className='inline-flex items-center gap-8'>
-                <span>Página {page} de {totalPages}</span>
+            <TableCell colSpan={3} className="text-right">
+              <div className="inline-flex items-center gap-8">
+                <span>
+                  Página {page} de {totalPages}
+                </span>
 
-                <div className='flex items-center gap-1.5'>
-                  <IconButton
-                    onClick={gotoFirstPage}
-                    disabled={page === 1}
-                  >
-                    <ChevronsLeft className='size-4' />
+                <div className="flex items-center gap-1.5">
+                  <IconButton onClick={gotoFirstPage} disabled={page === 1}>
+                    <ChevronsLeft className="size-4" />
                   </IconButton>
-                  <IconButton
-                    onClick={goToPreviousPage}
-                    disabled={page === 1}
-                  >
-                    <ChevronLeft className='size-4' />
+                  <IconButton onClick={goToPreviousPage} disabled={page === 1}>
+                    <ChevronLeft className="size-4" />
                   </IconButton>
                   <IconButton
                     onClick={goToNextPage}
                     disabled={page === totalPages}
                   >
-                    <ChevronRight className='size-4' />
+                    <ChevronRight className="size-4" />
                   </IconButton>
                   <IconButton
                     onClick={goToLastPage}
                     disabled={page === totalPages}
                   >
-                    <ChevronsRight className='size-4' />
+                    <ChevronsRight className="size-4" />
                   </IconButton>
                 </div>
               </div>
