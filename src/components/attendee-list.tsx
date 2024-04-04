@@ -66,7 +66,7 @@ export function AttendeeList() {
     url.searchParams.set('pageIndex', String(page - 1))
 
     if (search.length > 0) {
-      url.searchParams.set('query', search)
+      url.searchParams.set('search', search)
     }
 
     fetch(url)
