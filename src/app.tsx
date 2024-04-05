@@ -1,4 +1,4 @@
-import { AttendeeList } from './components/attendee-list'
+import { AttendeeList } from './pages/attendee-list'
 import { Header } from './components/header'
 
 export function App() {

@@ -10,11 +10,11 @@ import {
   Search,
 } from 'lucide-react'
 import { ChangeEvent, useEffect, useState } from 'react'
-import { IconButton } from './icon-button'
-import { Table } from './table/table'
-import { TableCell } from './table/table-cell'
-import { TableHeader } from './table/table-header'
-import { TableRow } from './table/table-row'
+import { IconButton } from '../components/icon-button'
+import { Table } from '../components/table/table'
+import { TableCell } from '../components/table/table-cell'
+import { TableHeader } from '../components/table/table-header'
+import { TableRow } from '../components/table/table-row'
 
 dayjs.extend(relativeTime)
 dayjs.locale('pt-br')
@@ -60,10 +60,11 @@ export function AttendeeList() {
 
   useEffect(() => {
     const url = new URL(
-      'http://localhost:3333/events/9e9bd979-9d10-4915-b339-3786b1634f33/attendees',
+      `${import.meta.env.VITE_API_URL}/events/9e9bd979-9d10-4915-b339-3786b1634f33/attendees`,
     )
 
     url.searchParams.set('pageIndex', String(page - 1))
+    url.searchParams.set('perPage', String(perPage))
 
     if (search.length > 0) {
       url.searchParams.set('search', search)
@@ -77,6 +78,16 @@ export function AttendeeList() {
         setTotalPages(Math.ceil(totalAttendees / perPage))
       })
   }, [page, perPage, totalAttendees, search])
+
+  function setCurrentPerPage(perPage: number) {
+    const url = new URL(window.location.toString())
+
+    url.searchParams.set('perPage', String(perPage))
+
+    window.history.pushState({}, '', url)
+
+    setPerPage(perPage)
+  }
 
   function setCurrentPage(page: number) {
     const url = new URL(window.location.toString())
@@ -100,6 +111,11 @@ export function AttendeeList() {
 
   function onSearchInputChange(event: ChangeEvent<HTMLInputElement>) {
     setCurrentSearch(event.target.value)
+    setCurrentPage(1)
+  }
+
+  function onPerPageInputChange(event: ChangeEvent<HTMLSelectElement>) {
+    setCurrentPerPage(Number(event.target.value))
     setCurrentPage(1)
   }
 
@@ -189,7 +205,32 @@ export function AttendeeList() {
         <tfoot>
           <tr>
             <TableCell colSpan={3}>
-              Mostrando {attendees.length} de {totalAttendees} itens
+              <div className="inline-flex items-center gap-8">
+                <span>
+                  Mostrando {attendees.length} de {totalAttendees} itens
+                </span>
+                <select
+                  value={perPage}
+                  onChange={onPerPageInputChange}
+                  className="bg-black/20 rounded border border-white/10"
+                >
+                  <option value="10" className="text-zinc-900">
+                    10
+                  </option>
+                  <option value="20" className="text-zinc-900">
+                    20
+                  </option>
+                  <option value="50" className="text-zinc-900">
+                    50
+                  </option>
+                  <option value="80" className="text-zinc-900">
+                    80
+                  </option>
+                  <option value="100" className="text-zinc-900">
+                    100
+                  </option>
+                </select>
+              </div>
             </TableCell>
             <TableCell colSpan={3} className="text-right">
               <div className="inline-flex items-center gap-8">
